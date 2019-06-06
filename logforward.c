@@ -127,7 +127,7 @@ struct entry * read_entry(int fd)
   return NULL;
 }
 
-char *hostname="wombat";
+char hostname[HOST_NAME_MAX];
 
 int to_rfc_format(char *out_buf, size_t out_buf_len, struct entry *e)
 {
@@ -214,6 +214,7 @@ int main(int argc, char *argv[])
   int out_fd = open_socket(argv[2], port);
   char out_buf[MESSAGE_MAX];
   struct entry *e;
+  gethostname(hostname, HOST_NAME_MAX);
   while(e = read_entry(in_fd)) {
     int bytes = to_rfc_format(out_buf, MESSAGE_MAX, e);
     int written = write(out_fd, out_buf, bytes);
