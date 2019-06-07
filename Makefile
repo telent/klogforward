@@ -1,1 +1,1 @@
-default: logforward
+default: klogforward
