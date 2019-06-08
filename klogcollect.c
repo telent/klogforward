@@ -12,7 +12,7 @@ static int open_unix_socket(char * socket_name)
 {
   int fd = socket(AF_UNIX, SOCK_DGRAM, 0);
   if(fd == -1)
-    exit(-1);
+    exit(1);
   
   struct sockaddr_un saddr;
   memset(&saddr, 0, sizeof(struct sockaddr_un));
@@ -31,8 +31,8 @@ static int open_kmsg(char * node_name)
 
 int main(int argc, char * argv[])
 {
-  int src = open_unix_socket("/tmp/log1");
-  int dst = open_kmsg("/dev/kmsg");
+  int src = open_unix_socket(argv[1]);
+  int dst = open_kmsg(argv[2]);
   char buf[2048];
   int bytes;
   while(1){

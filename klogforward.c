@@ -1,3 +1,4 @@
+#include <errno.h>
 #include <fcntl.h>
 #include <netdb.h>
 #include <stdio.h>
@@ -203,7 +204,6 @@ int open_socket(const char *hostname, char* port)
 
    return sfd;
 }
-#include <errno.h>
 
 
 int main(int argc, char *argv[])
