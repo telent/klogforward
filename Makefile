@@ -1,1 +1,1 @@
-default: klogforward
+default: klogforward  klogcollect
