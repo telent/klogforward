@@ -221,6 +221,7 @@ int main(int argc, char *argv[])
     int written = write(out_fd, out_buf, bytes);
     if(written < 0)
       warn("could not send: ", strerror(errno));
+    free_entry(e);
   }    
 }
   
