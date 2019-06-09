@@ -156,7 +156,7 @@ int to_rfc_format(char *out_buf, size_t out_buf_len, struct entry *e)
 	       "-",		/* no MSGID */
 	       e->message);
   } else {
-    return e->unparsed;
+    return e->message;
   }
 }
 
