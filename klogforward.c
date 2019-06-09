@@ -156,7 +156,8 @@ int to_rfc_format(char *out_buf, size_t out_buf_len, struct entry *e)
 	       "-",		/* no MSGID */
 	       e->message);
   } else {
-    return e->message;
+    strncpy(out_buf,  e->message, out_buf_len-1);
+    out_buf[out_buf_len-1] = '\0';
   }
 }
 
@@ -173,10 +174,10 @@ static inline int open_socket(const char *hostname, char* port)
    hints.ai_socktype = SOCK_DGRAM; /* Datagram socket */
    hints.ai_flags = 0;
    hints.ai_protocol = 0;          /* Any protocol */
-   
+     
    s = getaddrinfo(hostname, port, &hints, &result);
    if (s != 0) {
-     fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(s));
+     warn("getaddrinfo: ", gai_strerror(s));
      exit(EXIT_FAILURE);
    }
    
@@ -197,7 +198,7 @@ static inline int open_socket(const char *hostname, char* port)
    }
    
    if (rp == NULL) {               /* No address succeeded */
-     fprintf(stderr, "Could not connect\n");
+     warn("Could not connect","\n");
      exit(EXIT_FAILURE);
    }
    
