@@ -190,9 +190,7 @@ static inline int open_socket(const char *hostname, char* port)
 		  rp->ai_protocol);
      if (sfd == -1)
        continue;
-     printf("try %p ", rp->ai_addr);
      if (connect(sfd, rp->ai_addr, rp->ai_addrlen) != -1) {
-       printf("works!\n");
        break;                  /* Success */
      }
      close(sfd);
