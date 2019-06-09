@@ -139,29 +139,32 @@ int to_rfc_format(char *out_buf, size_t out_buf_len, struct entry *e)
   char timestamp[40];
   struct tm tm;
   struct timespec ts;
-  clock_gettime(CLOCK_REALTIME, &ts);
-  gmtime_r(&(ts.tv_sec), &tm);
-  strftime(timestamp, 40, "%FT%T", &tm);
-  return
-    snprintf(out_buf, out_buf_len, "<%ld>1 %s.%6ldZ %s %s %s %s %s %s",
-	     e->prefix,
-	     timestamp,
-	     (ts.tv_nsec / 1000),
-	     hostname,
-	     "kernel",		/* APP-NAME */
-	     "-",		/* no PROCID */
-	     "-",		/* no STRUCTURED-DATA */
-	     "-",		/* no MSGID */
-	     e->message);
+
+  if(e->prefix < 8) {		/* kernel */
+    clock_gettime(CLOCK_REALTIME, &ts);
+    gmtime_r(&(ts.tv_sec), &tm);
+    strftime(timestamp, 40, "%FT%T", &tm);
+    return
+      snprintf(out_buf, out_buf_len, "<%ld>1 %s.%6ldZ %s %s %s %s %s %s",
+	       e->prefix,
+	       timestamp,
+	       (ts.tv_nsec / 1000),
+	       hostname,
+	       "kernel",		/* APP-NAME */
+	       "-",		/* no PROCID */
+	       "-",		/* no STRUCTURED-DATA */
+	       "-",		/* no MSGID */
+	       e->message);
+  } else {
+    return e->unparsed;
+  }
 }
 
-int open_socket(const char *hostname, char* port)
+static inline int open_socket(const char *hostname, char* port)
 {
    struct addrinfo hints;
    struct addrinfo *result, *rp;
-   int sfd, s, j;
-   size_t len;
-   ssize_t nread;
+   int sfd, s;
    
    /* Obtain address(es) matching host/port */
    
