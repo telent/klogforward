@@ -158,6 +158,7 @@ int to_rfc_format(char *out_buf, size_t out_buf_len, struct entry *e)
   } else {
     strncpy(out_buf,  e->message, out_buf_len-1);
     out_buf[out_buf_len-1] = '\0';
+    return strlen(out_buf);
   }
 }
 
