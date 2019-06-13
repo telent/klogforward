@@ -11,17 +11,17 @@
 #include <time.h>
 #include <unistd.h>
 
-/* 
+/*
 
 syslog prefix
-, 
+,
 64 bit message sequence number
 ,
 monotonic timestamp in microseconds
 ,
 flag field: - (single line), c (first line), + (subsequent line)
 ;
-Human readable text string, followed by 
+Human readable text string, followed by
 \n
 
 continuation lines start with ' '
@@ -103,7 +103,7 @@ struct entry * read_entry(int fd)
   e = malloc(sizeof (struct entry) + num_pairs * sizeof(char *));
   e->unparsed = unparsed;
   e->num_pairs = num_pairs;
- 
+
   e->prefix = read_long(unparsed, &end, "prefix");
   if(e->prefix < 0) goto fail;
   if(*end == ';') goto message;
@@ -113,7 +113,7 @@ struct entry * read_entry(int fd)
   if(e->sequence < 0) goto fail;
   if(*end == ';') goto message;
   unparsed=end+1;
-    
+
   e->timestamp = read_long(unparsed, &end, "timestamp");
   if(e->timestamp < 0) goto fail;
 
@@ -122,7 +122,7 @@ struct entry * read_entry(int fd)
   newline = strchr(end+1, '\n');
   *newline = '\0';
   e->message = end+1;
-    
+
   return e;
  fail:
   return NULL;
@@ -166,26 +166,26 @@ static inline int open_socket(const char *hostname, char* port)
    struct addrinfo hints;
    struct addrinfo *result, *rp;
    int sfd, s;
-   
+
    /* Obtain address(es) matching host/port */
-   
+
    memset(&hints, 0, sizeof(struct addrinfo));
    hints.ai_family = AF_UNSPEC;    /* Allow IPv4 or IPv6 */
    hints.ai_socktype = SOCK_DGRAM; /* Datagram socket */
    hints.ai_flags = 0;
    hints.ai_protocol = 0;          /* Any protocol */
-     
+
    s = getaddrinfo(hostname, port, &hints, &result);
    if (s != 0) {
      warn("getaddrinfo: ", gai_strerror(s));
      exit(EXIT_FAILURE);
    }
-   
+
    /* getaddrinfo() returns a list of address structures.
       Try each address until we successfully connect(2).
       If socket(2) (or connect(2)) fails, we (close the socket
       and) try the next address. */
-   
+
    for (rp = result; rp != NULL; rp = rp->ai_next) {
      sfd = socket(rp->ai_family, rp->ai_socktype,
 		  rp->ai_protocol);
@@ -196,12 +196,12 @@ static inline int open_socket(const char *hostname, char* port)
      }
      close(sfd);
    }
-   
+
    if (rp == NULL) {               /* No address succeeded */
      warn("Could not connect","\n");
      exit(EXIT_FAILURE);
    }
-   
+
    freeaddrinfo(result);           /* No longer needed */
 
    return sfd;
@@ -223,6 +223,5 @@ int main(int argc, char *argv[])
     if(written < 0)
       warn("could not send: ", strerror(errno));
     free_entry(e);
-  }    
+  }
 }
-  
